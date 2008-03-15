@@ -1,6 +1,6 @@
 package TestAdoptCAF;
 
-use base qw/Class::Accessor::Fast/;
+use base 'Class::Accessor::Fast';
 
 __PACKAGE__->mk_accessors('foo');
 __PACKAGE__->mk_ro_accessors('bar');

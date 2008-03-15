@@ -1,8 +1,8 @@
 package MooseX::Emulate::Class::Accessor::Fast;
 
-use Moose;
+use Moose::Role;
 
-our $VERSION = 0.0001;
+our $VERSION = 0.00100;
 
 =head1 NAME
 
@@ -12,11 +12,10 @@ MooseX::Emulate::Class::Accessor::Fast -
 =head1 SYNOPSYS
 
     package MyClass;
+    Use Moose;
 
-    use base 'MooseX::Emulate::Class::Accessor::Fast';
-    #or
-    use Moose;
-    extends 'MooseX::Emulate::Class::Accessor::Fast';
+    with 'MooseX::Emulate::Class::Accessor::Fast';
+
 
     #fields with readers and writers
     __PACKAGE__->mk_accessors(qw/field1 field2/);
@@ -32,7 +31,7 @@ This module attempts to emulate the behavior of L<Class::Accessor::Fast> as
 accurately as possible using the Moose attribute system. The public API of
 C<Class::Accessor::Fast> is wholly supported, but the private methods are not.
 If you are only using the public methods (as you should) migration should be a
-matter of switching your C<use base> line.
+matter of switching your C<use base> line to a C<with> line.
 
 While I have attempted to emulate the behavior of Class::Accessor::Fast as closely
 as possible bugs may still be lurking in edge-cases.

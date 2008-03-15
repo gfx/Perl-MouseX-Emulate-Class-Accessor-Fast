@@ -1,12 +1,13 @@
 package MooseX::Adopt::Class::Accessor::Fast;
 
-our $VERSION = 0.0001;
+our $VERSION = 0.00100;
 
 $INC{'Class/Accessor/Fast.pm'} = __FILE__;
 
 package Class::Accessor::Fast;
 
-use base qw/MooseX::Emulate::Class::Accessor::Fast/;
+use Moose;
+with 'MooseX::Emulate::Class::Accessor::Fast';
 
 1;
 
@@ -33,12 +34,15 @@ you migrate your project from L<Class::Accessor::Fast>, to
 
 L<Moose>, L<Class::Accessor::Fast>, L<MooseX::Emulate::Class::Accessor::Fast>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
-Matt S Trout
+=over 4
 
-With Contributions from:
-Guillermo Roditi (groditi) <groditi@cpan.org>
+=item Matt S Trout
+
+=item Guillermo Roditi (groditi) <groditi@cpan.org>
+
+=back
 
 =head1 LICENSE
 
