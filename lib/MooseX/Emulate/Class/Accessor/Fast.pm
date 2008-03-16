@@ -2,7 +2,7 @@ package MooseX::Emulate::Class::Accessor::Fast;
 
 use Moose::Role;
 
-our $VERSION = 0.00100;
+our $VERSION = '0.00100';
 
 =head1 NAME
 
