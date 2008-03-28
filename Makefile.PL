@@ -13,5 +13,4 @@ requires 'Moose';
 
 build_requires 'Test::More' => 0;
 
-auto_install;
 WriteAll;

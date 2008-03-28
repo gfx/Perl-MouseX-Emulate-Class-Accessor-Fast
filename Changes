@@ -1,2 +1,6 @@
+0.00200    Mar 28, 2008
+           - Extend BUILDALL to store constructor keys in the obj. hashref
+           - Minor fix to make sure Adopt doesn't trip PAUSE perms
+           - Bye bye auto_install.
 0.00100    Mar 15, 2008
            - Initial Release!

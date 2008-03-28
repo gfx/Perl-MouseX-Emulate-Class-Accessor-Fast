@@ -1,10 +1,11 @@
 package MooseX::Adopt::Class::Accessor::Fast;
 
-our $VERSION = '0.00100';
+our $VERSION = '0.00200';
 
 $INC{'Class/Accessor/Fast.pm'} = __FILE__;
 
-package Class::Accessor::Fast;
+package #don't index
+    Class::Accessor::Fast;
 
 use Moose;
 with 'MooseX::Emulate::Class::Accessor::Fast';
