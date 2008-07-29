@@ -72,7 +72,7 @@ sub BUILD {
   my %args;
   if (scalar @_ == 1 && defined $_[0] && ref($_[0]) eq 'HASH') {
     %args = %{$_[0]};
-  } else {
+  } elsif( scalar(@_) ) {
     %args = @_;
   }
   my @extra = grep { !exists($self->{$_}) } keys %args;
@@ -230,7 +230,7 @@ L<Class::MOP::Attribute>, L<MooseX::Adopt::Class::Accessor::Fast>
 
 =head1 AUTHOR
 
-Guillermo Roditi (groditi) <groditi@cpan.org>
+Guillermo Roditi (groditi) E<lt>groditi@cpan.orgE<gt>
 
 =head1 LICENSE
 
