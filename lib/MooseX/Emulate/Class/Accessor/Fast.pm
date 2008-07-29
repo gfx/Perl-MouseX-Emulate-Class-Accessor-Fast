@@ -2,7 +2,7 @@ package MooseX::Emulate::Class::Accessor::Fast;
 
 use Moose::Role;
 
-our $VERSION = '0.00200';
+our $VERSION = '0.00300';
 
 =head1 NAME
 
@@ -12,7 +12,7 @@ MooseX::Emulate::Class::Accessor::Fast -
 =head1 SYNOPSYS
 
     package MyClass;
-    Use Moose;
+    use Moose;
 
     with 'MooseX::Emulate::Class::Accessor::Fast';
 
@@ -60,27 +60,25 @@ methods in L<Class::MOP::Attribute>. Example
 
 =head1 METHODS
 
-=head2 new %args
+=head2 BUILD $self %args
 
-Extend the default Moose constructor to emulate the behavior of C::A::F and
+Change the default Moose class building to emulate the behavior of C::A::F and
 store arguments in the instance hashref.
 
 =cut
 
-around new => sub{
-  my $orig = shift;
-  my $class = shift;
+sub BUILD {
+  my $self = shift;
   my %args;
   if (scalar @_ == 1 && defined $_[0] && ref($_[0]) eq 'HASH') {
     %args = %{$_[0]};
   } else {
     %args = @_;
   }
-  my $self = $class->$orig(@_);
   my @extra = grep { !exists($self->{$_}) } keys %args;
   @{$self}{@extra} = @args{@extra};
   return $self;
-};
+}
 
 =head2 mk_accessors @field_names
 

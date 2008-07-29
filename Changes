@@ -1,3 +1,6 @@
+0.00300    Jul XX, 2008
+           - Replace around 'new' with a BUILD method. Faster and avoids Moose
+             bug with around/immutable and sub-classes.
 0.00200    Mar 28, 2008
            - Extend BUILDALL to store constructor keys in the obj. hashref
            - Minor fix to make sure Adopt doesn't trip PAUSE perms
