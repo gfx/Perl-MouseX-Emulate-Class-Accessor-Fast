@@ -228,9 +228,17 @@ See L<Moose::Meta::Class>.
 L<Moose>, L<Moose::Meta::Attribute>, L<Class::Accessor>, L<Class::Accessor::Fast>,
 L<Class::MOP::Attribute>, L<MooseX::Adopt::Class::Accessor::Fast>
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Guillermo Roditi (groditi) E<lt>groditi@cpan.orgE<gt>
+
+With contributions from:
+
+=over 4
+
+=item Tomas Doran E<lt>bobtfish@bobtfish.netE<gt>
+
+=back
 
 =head1 LICENSE
 
