@@ -9,8 +9,7 @@ abstract 'Emnulate Class::Accessor::Fast using attributes';
 all_from 'lib/MooseX/Emulate/Class/Accessor/Fast.pm';
 
 # Specific dependencies
-requires 'Moose';
-
+requires 'Moose' => '0.31';
 build_requires 'Test::More' => 0;
 
 WriteAll;

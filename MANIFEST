@@ -15,5 +15,6 @@ META.yml
 README
 t/accessors.t
 t/adopt.t
+t/construction.t
 t/getset.t
 t/lib/TestAdoptCAF.pm

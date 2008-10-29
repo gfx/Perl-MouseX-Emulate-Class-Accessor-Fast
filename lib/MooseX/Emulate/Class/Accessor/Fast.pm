@@ -2,7 +2,7 @@ package MooseX::Emulate::Class::Accessor::Fast;
 
 use Moose::Role;
 
-our $VERSION = '0.00300';
+our $VERSION = '0.00400';
 
 =head1 NAME
 
@@ -97,17 +97,23 @@ sub mk_accessors{
   for my $attr_name (@_){
     my $reader = $self->accessor_name_for($attr_name);
     my $writer = $self->mutator_name_for( $attr_name);
-    #dont overwrite existing methods
-    my @opts = $reader eq $writer ?
-      ( $self->can($reader) ? () : (accessor => $reader) ) :
-        (
-         ( $self->can($reader) ? () : (reader => $reader) ),
-         ( $self->can($writer) ? () : (writer => $writer) ),
-        );
-    $meta->add_attribute($attr_name, @opts);
 
-    $meta->add_method("_${attr_name}_accessor", $self->can($reader) )
-      if($reader eq $attr_name && !$self->can("_${attr_name}_accessor") );
+    #dont overwrite existing methods
+    if($reader eq $writer){
+      my %opts = ( $self->can($reader) ? () : (accessor => $reader) );
+      my $attr = $meta->add_attribute($attr_name, %opts);
+      if($attr_name eq $reader){
+        my $alias = "_${attr_name}_accessor";
+        next if $self->can($alias);
+        my @alias_method = $opts{accessor} ? ( $alias => $self->can($reader) )
+          : ( $attr->process_accessors(accessor => $alias, 0 ) );
+        $meta->add_method(@alias_method);
+      }
+    } else {
+      my @opts = ( $self->can($writer) ? () : (writer => $writer) );
+      push(@opts, (reader => $reader)) unless $self->can($reader);
+      $meta->add_attribute($attr_name, @opts);
+    }
   }
 }
 
@@ -122,10 +128,12 @@ sub mk_ro_accessors{
   my $meta = $self->meta;
   for my $attr_name (@_){
     my $reader = $self->accessor_name_for($attr_name);
-    $meta->add_attribute($attr_name,
-                         $self->can($reader) ? () : (reader => $reader) );
-    $meta->add_method("_${attr_name}_accessor", $meta->find_method_by_name($reader))
-      if($reader eq $attr_name && !$self->can("_${attr_name}_accessor") );
+    my @opts = ($self->can($reader) ? () : (reader => $reader) );
+    my $attr = $meta->add_attribute($attr_name, @opts);
+    if($reader eq $attr_name && $reader eq $self->mutator_name_for($attr_name)){
+      $meta->add_method("_${attr_name}_accessor" => $attr->get_read_method_ref)
+        unless $self->can("_${attr_name}_accessor");
+    }
   }
 }
 
@@ -141,9 +149,12 @@ sub mk_wo_accessors{
   my $meta = $self->meta;
   for my $attr_name (@_){
     my $writer = $self->mutator_name_for($attr_name);
-    $meta->add_attribute($attr_name, $self->can($writer) ? () : (writer => $writer) );
-    $meta->add_method("_${attr_name}_accessor", $meta->find_method_by_name($writer))
-      if($writer eq $attr_name && !$self->can("_${attr_name}_accessor") );
+    my @opts = ($self->can($writer) ? () : (writer => $writer) );
+    my $attr = $meta->add_attribute($attr_name, @opts);
+    if($writer eq $attr_name && $writer eq $self->accessor_name_for($attr_name)){
+      $meta->add_method("_${attr_name}_accessor" => $attr->get_write_method_ref)
+        unless $self->can("_${attr_name}_accessor");
+    }
   }
 }
 
