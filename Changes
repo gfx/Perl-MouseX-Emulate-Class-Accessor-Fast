@@ -1,5 +1,6 @@
 0.00500   
           - make_accessor, make_ro_accessor, make_rw_accessor
+            - tests
 0.00400    Oct 28, 2008
            - Fix bug where a bad assumption was causing us to infinitely loop
              on badly-written code like Data::Page. (Reported by marcus)

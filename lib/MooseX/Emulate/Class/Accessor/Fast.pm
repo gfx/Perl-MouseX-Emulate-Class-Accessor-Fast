@@ -234,8 +234,8 @@ sub make_accessor {
   my $writer = $attr->get_write_method_ref;
   return sub {
     my $self = shift;
-    return $self->$reader unless @_;
-    return $self->$writer((@_ > 1 ? [@_] : @_));
+    return $reader->($self) unless @_;
+    return $writer->($self,(@_ > 1 ? [@_] : @_));
   }
 }
 
