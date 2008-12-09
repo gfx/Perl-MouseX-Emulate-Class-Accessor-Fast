@@ -18,3 +18,5 @@ t/adopt.t
 t/construction.t
 t/getset.t
 t/lib/TestAdoptCAF.pm
+t/meta.t
+t/no_replace_existing_symbols.t
