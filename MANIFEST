@@ -15,8 +15,8 @@ META.yml
 README
 t/accessors.t
 t/adopt.t
+t/attr_named_meta.t
 t/construction.t
 t/getset.t
 t/lib/TestAdoptCAF.pm
-t/meta.t
 t/no_replace_existing_symbols.t
