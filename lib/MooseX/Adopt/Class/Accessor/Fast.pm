@@ -8,6 +8,7 @@ package #don't index
     Class::Accessor::Fast;
 
 use Moose;
+use namespace::clean;
 with 'MooseX::Emulate::Class::Accessor::Fast';
 
 1;

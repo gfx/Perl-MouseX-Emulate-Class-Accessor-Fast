@@ -1,8 +1,10 @@
 package MooseX::Emulate::Class::Accessor::Fast;
 
 use Moose::Role;
+use Class::MOP ();
+use Scalar::Util ();
 
-our $VERSION = '0.00500';
+our $VERSION = '0.00600';
 
 =head1 NAME
 
@@ -67,6 +69,12 @@ store arguments in the instance hashref.
 
 =cut
 
+my $locate_metaclass = sub {
+  my $class = Scalar::Util::blessed($_[0]) || $_[0];
+  return Class::MOP::get_metaclass_by_name($class)
+    || Moose::Meta::Class->initialize($class);
+};
+
 sub BUILD {
   my $self = shift;
   my %args;
@@ -93,25 +101,24 @@ will be passed. Please see L<Class::MOP::Attribute> for more information.
 
 sub mk_accessors{
   my $self = shift;
-  my $meta = $self->meta;
+  my $meta = $locate_metaclass->($self);
   for my $attr_name (@_){
     my $reader = $self->accessor_name_for($attr_name);
     my $writer = $self->mutator_name_for( $attr_name);
 
     #dont overwrite existing methods
     if($reader eq $writer){
-      my %opts = ( $self->can($reader) ? () : (accessor => $reader) );
+      my %opts = ( $meta->has_method($reader) ? () : (accessor => $reader) );
       my $attr = $meta->add_attribute($attr_name, %opts);
       if($attr_name eq $reader){
         my $alias = "_${attr_name}_accessor";
-        next if $self->can($alias);
-        my @alias_method = $opts{accessor} ? ( $alias => $self->can($reader) )
-          : ( $attr->process_accessors(accessor => $alias, 0 ) );
+        next if $meta->has_method($alias);
+        my @alias_method = $attr->process_accessors(accessor => $alias, 0);
         $meta->add_method(@alias_method);
       }
     } else {
-      my @opts = ( $self->can($writer) ? () : (writer => $writer) );
-      push(@opts, (reader => $reader)) unless $self->can($reader);
+      my @opts = ( $meta->has_method($writer) ? () : (writer => $writer) );
+      push(@opts, (reader => $reader)) unless $meta->has_method($reader);
       $meta->add_attribute($attr_name, @opts);
     }
   }
@@ -125,14 +132,14 @@ Create read-only accessors.
 
 sub mk_ro_accessors{
   my $self = shift;
-  my $meta = $self->meta;
+  my $meta = $locate_metaclass->($self);
   for my $attr_name (@_){
     my $reader = $self->accessor_name_for($attr_name);
-    my @opts = ($self->can($reader) ? () : (reader => $reader) );
+    my @opts = ($meta->has_method($reader) ? () : (reader => $reader) );
     my $attr = $meta->add_attribute($attr_name, @opts);
     if($reader eq $attr_name && $reader eq $self->mutator_name_for($attr_name)){
       $meta->add_method("_${attr_name}_accessor" => $attr->get_read_method_ref)
-        unless $self->can("_${attr_name}_accessor");
+        unless $meta->has_method("_${attr_name}_accessor");
     }
   }
 }
@@ -146,14 +153,14 @@ Create write-only accessors.
 #this is retarded.. but we need it for compatibility or whatever.
 sub mk_wo_accessors{
   my $self = shift;
-  my $meta = $self->meta;
+  my $meta = $locate_metaclass->($self);
   for my $attr_name (@_){
     my $writer = $self->mutator_name_for($attr_name);
-    my @opts = ($self->can($writer) ? () : (writer => $writer) );
+    my @opts = ($meta->has_method($writer) ? () : (writer => $writer) );
     my $attr = $meta->add_attribute($attr_name, @opts);
     if($writer eq $attr_name && $writer eq $self->accessor_name_for($attr_name)){
       $meta->add_method("_${attr_name}_accessor" => $attr->get_write_method_ref)
-        unless $self->can("_${attr_name}_accessor");
+        unless $meta->has_method("_${attr_name}_accessor");
     }
   }
 }
@@ -167,7 +174,7 @@ See original L<Class::Accessor> documentation for more information.
 
 sub follow_best_practice{
   my $self = shift;
-  my $meta = $self->meta;
+  my $meta = $locate_metaclass->($self);
 
   $meta->remove_method('mutator_name_for');
   $meta->remove_method('accessor_name_for');
@@ -196,11 +203,11 @@ sub set{
   my $self = shift;
   my $k = shift;
   confess "Wrong number of arguments received" unless scalar @_;
+  my $meta = $locate_metaclass->($self);
 
-  #my $writer = $self->mutator_name_for( $k );
   confess "No such attribute  '$k'"
-    unless ( my $attr = $self->meta->find_attribute_by_name($k) );
-  my $writer = $attr->writer || $attr->accessor;
+    unless ( my $attr = $meta->find_attribute_by_name($k) );
+  my $writer = $attr->get_write_method;
   $self->$writer(@_ > 1 ? [@_] : @_);
 }
 
@@ -213,13 +220,13 @@ See original L<Class::Accessor> documentation for more information.
 sub get{
   my $self = shift;
   confess "Wrong number of arguments received" unless scalar @_;
-
+  my $meta = $locate_metaclass->($self);
   my @values;
-  #while( my $attr = $self->meta->find_attribute_by_name( shift(@_) ){
+
   for( @_ ){
     confess "No such attribute  '$_'"
-      unless ( my $attr = $self->meta->find_attribute_by_name($_) );
-    my $reader = $attr->reader || $attr->accessor;
+      unless ( my $attr = $meta->find_attribute_by_name($_) );
+    my $reader = $attr->get_read_method;
     @_ > 1 ? push(@values, $self->$reader) : return $self->$reader;
   }
 
@@ -228,7 +235,7 @@ sub get{
 
 sub make_accessor {
   my($class, $field) = @_;
-  my $meta = $class->meta;
+  my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field); 
   my $reader = $attr->get_read_method_ref;
   my $writer = $attr->get_write_method_ref;
@@ -242,7 +249,7 @@ sub make_accessor {
 
 sub make_ro_accessor {
   my($class, $field) = @_;
-  my $meta = $class->meta;
+  my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field); 
   return $attr->get_read_method_ref;
 }
@@ -250,11 +257,10 @@ sub make_ro_accessor {
 
 sub make_wo_accessor {
   my($class, $field) = @_;
-  my $meta = $class->meta;
+  my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field); 
   return $attr->get_write_method_ref;
 }
-
 
 1;
 

@@ -1,8 +1,11 @@
-0.00600
+0.00600    Dec 17, 2008
           - Add test for a 'meta' accessor, which we need to treat as a 
             special case (t0m)
           - Add test for not replacing pre-existing accessors generally, 
             which is behavior we don't want to lose (t0m)
+          - Don't use ->meta
+          - Don't use ->can
+          - Attempt to support attrs named meta with no success. test marked as todo.
 0.00500    Dec 9, 2008
           - make_accessor, make_ro_accessor, make_rw_accessor
             - tests
