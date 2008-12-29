@@ -103,6 +103,8 @@ sub mk_accessors{
   my $self = shift;
   my $meta = $locate_metaclass->($self);
   for my $attr_name (@_){
+    $meta->remove_attribute($attr_name)
+      if $meta->find_attribute_by_name($attr_name);
     my $reader = $self->accessor_name_for($attr_name);
     my $writer = $self->mutator_name_for( $attr_name);
 
@@ -134,6 +136,8 @@ sub mk_ro_accessors{
   my $self = shift;
   my $meta = $locate_metaclass->($self);
   for my $attr_name (@_){
+    $meta->remove_attribute($attr_name)
+      if $meta->find_attribute_by_name($attr_name);
     my $reader = $self->accessor_name_for($attr_name);
     my @opts = ($meta->has_method($reader) ? () : (reader => $reader) );
     my $attr = $meta->add_attribute($attr_name, @opts);
@@ -155,6 +159,8 @@ sub mk_wo_accessors{
   my $self = shift;
   my $meta = $locate_metaclass->($self);
   for my $attr_name (@_){
+    $meta->remove_attribute($attr_name)
+      if $meta->find_attribute_by_name($attr_name);
     my $writer = $self->mutator_name_for($attr_name);
     my @opts = ($meta->has_method($writer) ? () : (writer => $writer) );
     my $attr = $meta->add_attribute($attr_name, @opts);
