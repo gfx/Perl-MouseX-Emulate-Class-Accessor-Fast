@@ -102,6 +102,11 @@ will be passed. Please see L<Class::MOP::Attribute> for more information.
 sub mk_accessors{
   my $self = shift;
   my $meta = $locate_metaclass->($self);
+  my $class = $meta->name;
+  confess("You are trying to modify ${class}, which has been made immutable, this is ".
+    "not supported. Try subclassing ${class}, rather than monkeypatching it")
+    if $meta->is_immutable;
+
   for my $attr_name (@_){
     $meta->remove_attribute($attr_name)
       if $meta->find_attribute_by_name($attr_name);
@@ -135,6 +140,10 @@ Create read-only accessors.
 sub mk_ro_accessors{
   my $self = shift;
   my $meta = $locate_metaclass->($self);
+  my $class = $meta->name;
+  confess("You are trying to modify ${class}, which has been made immutable, this is ".
+    "not supported. Try subclassing ${class}, rather than monkeypatching it")
+    if $meta->is_immutable;
   for my $attr_name (@_){
     $meta->remove_attribute($attr_name)
       if $meta->find_attribute_by_name($attr_name);
@@ -158,6 +167,10 @@ Create write-only accessors.
 sub mk_wo_accessors{
   my $self = shift;
   my $meta = $locate_metaclass->($self);
+  my $class = $meta->name;
+  confess("You are trying to modify ${class}, which has been made immutable, this is ".
+    "not supported. Try subclassing ${class}, rather than monkeypatching it")
+    if $meta->is_immutable;
   for my $attr_name (@_){
     $meta->remove_attribute($attr_name)
       if $meta->find_attribute_by_name($attr_name);
