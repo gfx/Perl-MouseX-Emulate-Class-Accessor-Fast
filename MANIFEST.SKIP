@@ -24,6 +24,7 @@
 \#$
 \b\.#
 \.DS_Store$
+\.\#
 
 # No tarballs!
 \.gz$
