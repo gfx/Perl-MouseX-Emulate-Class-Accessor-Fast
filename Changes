@@ -1,4 +1,4 @@
-0.00700    
+0.00700    Dec 29, 2008
           - Creating a new accessor with the same name as an old one would result in
             a new attribute with no reader/writer/accessor. Reported by t0m
              - tests (t0m) 
