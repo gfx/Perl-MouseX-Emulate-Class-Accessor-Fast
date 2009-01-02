@@ -4,7 +4,7 @@ use Moose::Role;
 use Class::MOP ();
 use Scalar::Util ();
 
-our $VERSION = '0.00700';
+our $VERSION = '0.00701';
 
 =head1 NAME
 
