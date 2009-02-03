@@ -4,6 +4,8 @@ use Moose::Role;
 use Class::MOP ();
 use Scalar::Util ();
 
+use MooseX::Emulate::Class::Accessor::Fast::Meta::Accessor ();
+
 our $VERSION = '0.00701';
 
 =head1 NAME
@@ -116,7 +118,9 @@ sub mk_accessors{
     #dont overwrite existing methods
     if($reader eq $writer){
       my %opts = ( $meta->has_method($reader) ? () : (accessor => $reader) );
-      my $attr = $meta->add_attribute($attr_name, %opts);
+      my $attr = $meta->find_attribute_by_name($attr_name) || $meta->add_attribute($attr_name, %opts,
+        traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+      );
       if($attr_name eq $reader){
         my $alias = "_${attr_name}_accessor";
         next if $meta->has_method($alias);
@@ -126,7 +130,9 @@ sub mk_accessors{
     } else {
       my @opts = ( $meta->has_method($writer) ? () : (writer => $writer) );
       push(@opts, (reader => $reader)) unless $meta->has_method($reader);
-      $meta->add_attribute($attr_name, @opts);
+      my $attr = $meta->find_attribute_by_name($attr_name) || $meta->add_attribute($attr_name, @opts,
+        traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+      );
     }
   }
 }
@@ -149,7 +155,9 @@ sub mk_ro_accessors{
       if $meta->find_attribute_by_name($attr_name);
     my $reader = $self->accessor_name_for($attr_name);
     my @opts = ($meta->has_method($reader) ? () : (reader => $reader) );
-    my $attr = $meta->add_attribute($attr_name, @opts);
+    my $attr = $meta->add_attribute($attr_name, @opts,
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+    ) if scalar(@opts);
     if($reader eq $attr_name && $reader eq $self->mutator_name_for($attr_name)){
       $meta->add_method("_${attr_name}_accessor" => $attr->get_read_method_ref)
         unless $meta->has_method("_${attr_name}_accessor");
@@ -176,7 +184,9 @@ sub mk_wo_accessors{
       if $meta->find_attribute_by_name($attr_name);
     my $writer = $self->mutator_name_for($attr_name);
     my @opts = ($meta->has_method($writer) ? () : (writer => $writer) );
-    my $attr = $meta->add_attribute($attr_name, @opts);
+    my $attr = $meta->add_attribute($attr_name, @opts,
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+    ) if scalar(@opts);
     if($writer eq $attr_name && $writer eq $self->accessor_name_for($attr_name)){
       $meta->add_method("_${attr_name}_accessor" => $attr->get_write_method_ref)
         unless $meta->has_method("_${attr_name}_accessor");
@@ -255,7 +265,9 @@ sub get{
 sub make_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
-  my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field); 
+  my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+  );
   my $reader = $attr->get_read_method_ref;
   my $writer = $attr->get_write_method_ref;
   return sub {
@@ -269,7 +281,9 @@ sub make_accessor {
 sub make_ro_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
-  my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field); 
+  my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+  );
   return $attr->get_read_method_ref;
 }
 
@@ -277,7 +291,9 @@ sub make_ro_accessor {
 sub make_wo_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
-  my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field); 
+  my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+  );
   return $attr->get_write_method_ref;
 }
 
