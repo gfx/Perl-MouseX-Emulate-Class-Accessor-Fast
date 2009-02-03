@@ -1,4 +1,4 @@
-0.00800    ??? ??, 2009
+0.00800    Feb 03, 2009
           - Fix assigning a list to an accessor stores a list ref
              - tests
           - TODO test for Class::Accessor::Chained::Fast compatibility
