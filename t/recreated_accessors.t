@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 4;
+use Test::More tests => 5;
 use Test::Exception;
 
 # 1
@@ -25,8 +25,9 @@ lives_ok {
   $i->foo('foo');
   $i->baz('baz');
 
-  # 3-4
+  # 3-5
   is($i->foo, 'foo');
   is($i->bar, 'bar');
+  is($i->{baz}, 'baz');
 } 'No exception';
 

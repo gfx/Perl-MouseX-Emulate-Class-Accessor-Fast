@@ -1,11 +1,16 @@
-0.00701    Jan 02, 2008
+0.00800    ??? ??, 2009
+          - Fix assigning a list to an accessor stores a list ref
+             - tests
+          - TODO test for Class::Accessor::Chained::Fast compatibility
+0.00701    Jan 02, 2009
           - Better errors when trying to modify an immutable class
           - Fix typo in Makefile.PL description
           - Missing dep in Makefile.PL (rafl)
 0.00700    Dec 29, 2008
-          - Creating a new accessor with the same name as an old one would result in
-            a new attribute with no reader/writer/accessor. Reported by t0m
-             - tests (t0m) 
+          - Creating a new accessor with the same name as an old one would 
+            result in a new attribute with no reader/writer/accessor. 
+            Reported by t0m
+             - tests (t0m)
 0.00600    Dec 17, 2008
           - Add test for a 'meta' accessor, which we need to treat as a 
             special case (t0m)
@@ -13,7 +18,8 @@
             which is behavior we don't want to lose (t0m)
           - Don't use ->meta
           - Don't use ->can
-          - Attempt to support attrs named meta with no success. test marked as todo.
+          - Attempt to support attrs named meta with no success. test marked 
+            as todo.
 0.00500    Dec 9, 2008
           - make_accessor, make_ro_accessor, make_rw_accessor
             - tests
