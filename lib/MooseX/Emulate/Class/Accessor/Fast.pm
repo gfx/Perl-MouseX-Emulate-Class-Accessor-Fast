@@ -10,8 +10,7 @@ our $VERSION = '0.00800';
 
 =head1 NAME
 
-MooseX::Emulate::Class::Accessor::Fast -
-  Emulate Class::Accessor::Fast behavior using Moose attributes
+MooseX::Emulate::Class::Accessor::Fast - Emulate Class::Accessor::Fast behavior using Moose attributes
 
 =head1 SYNOPSYS
 
