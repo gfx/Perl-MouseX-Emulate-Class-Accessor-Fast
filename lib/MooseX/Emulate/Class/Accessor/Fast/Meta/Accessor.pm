@@ -4,7 +4,7 @@ use Moose;
 
 extends 'Moose::Meta::Method::Accessor';
 
-sub generate_accessor_method {
+sub _generate_accessor_method {
     my $attr = (shift)->associated_attribute;
     return sub {
         my $self = shift;
@@ -14,7 +14,7 @@ sub generate_accessor_method {
     };
 }
 
-sub generate_writer_method {
+sub _generate_writer_method {
     my $attr = (shift)->associated_attribute;
     return sub {
         my $self = shift;
@@ -24,7 +24,7 @@ sub generate_writer_method {
 }
 
 # FIXME - this is shite, but it does work...
-sub generate_accessor_method_inline {
+sub _generate_accessor_method_inline {
     my $attr          = (shift)->associated_attribute;
     my $attr_name     = $attr->name;
     my $meta_instance = $attr->associated_class->instance_metaclass;
@@ -42,7 +42,7 @@ sub generate_accessor_method_inline {
 
 {
     my $meta = __PACKAGE__->meta;
-    $meta->add_method(generate_writer_method_inline => $meta->get_method('generate_accessor_method_inline'));
+    $meta->add_method(_generate_writer_method_inline => $meta->get_method('_generate_accessor_method_inline'));
 }
 
 no Moose;
