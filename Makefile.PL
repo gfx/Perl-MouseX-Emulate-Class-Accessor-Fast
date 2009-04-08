@@ -8,7 +8,7 @@ name 'MooseX-Emulate-Class-Accessor-Fast';
 all_from 'lib/MooseX/Emulate/Class/Accessor/Fast.pm';
 
 # Specific dependencies
-requires 'Moose' => '0.73_01';
+requires 'Moose' => '0.74';
 requires 'namespace::clean' => 0;
 build_requires 'Test::More' => 0;
 
