@@ -32,7 +32,7 @@ my $class = "Testing::Class::Accessor::Fast";
   $class->mk_accessors(qw( best));
 }
 
-my %attrs = map{$_->name => $_} $class->meta->compute_all_applicable_attributes;
+my %attrs = map{$_->name => $_} $class->meta->get_all_attributes;
 
 #2
 is(keys %attrs, 11, 'Correct number of attributes');
