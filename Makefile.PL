@@ -5,7 +5,6 @@ use inc::Module::Install;
 
 # Define metadata
 name 'MooseX-Emulate-Class-Accessor-Fast';
-abstract 'Emulate Class::Accessor::Fast using attributes';
 all_from 'lib/MooseX/Emulate/Class/Accessor/Fast.pm';
 
 # Specific dependencies
