@@ -1,3 +1,5 @@
+          - Fix doc typos in SYNOPSIS. Closes RT#40380. (rafl)
+
 0.00801    Apr 09, 2009
           - Make the accessor meta method class compatible with recent Moose.
           - Stop using deprecated Moose api to avoid warnings.

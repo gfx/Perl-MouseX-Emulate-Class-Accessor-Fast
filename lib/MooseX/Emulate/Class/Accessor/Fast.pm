@@ -23,9 +23,9 @@ MooseX::Emulate::Class::Accessor::Fast - Emulate Class::Accessor::Fast behavior 
     #fields with readers and writers
     __PACKAGE__->mk_accessors(qw/field1 field2/);
     #fields with readers only
-    __PACKAGE__->mk_accessors(qw/field3 field4/);
+    __PACKAGE__->mk_ro_accessors(qw/field3 field4/);
     #fields with writers only
-    __PACKAGE__->mk_accessors(qw/field5 field6/);
+    __PACKAGE__->mk_wo_accessors(qw/field5 field6/);
 
 
 =head1 DESCRIPTION
