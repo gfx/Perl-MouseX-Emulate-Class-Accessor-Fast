@@ -1,3 +1,4 @@
+          - Turn build_requires on Test::More into test_requires. (rafl)
           - Fix doc typos in SYNOPSIS. Closes RT#40380. (rafl)
 
 0.00801    Apr 09, 2009
