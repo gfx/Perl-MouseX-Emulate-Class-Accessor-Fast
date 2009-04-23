@@ -11,5 +11,6 @@ all_from 'lib/MooseX/Emulate/Class/Accessor/Fast.pm';
 requires 'Moose' => '0.74';
 requires 'namespace::clean' => 0;
 test_requires 'Test::More' => 0;
+test_requires 'Test::Exception' => 0;
 
 WriteAll;

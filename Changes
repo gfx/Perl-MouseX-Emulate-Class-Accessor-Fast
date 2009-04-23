@@ -1,3 +1,4 @@
+          - Declare test dependency on Test::Exception. Closes RT#43194. (rafl)
           - Turn build_requires on Test::More into test_requires. (rafl)
           - Fix doc typos in SYNOPSIS. Closes RT#40380. (rafl)
 
