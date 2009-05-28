@@ -76,15 +76,13 @@ my $locate_metaclass = sub {
     || Moose::Meta::Class->initialize($class);
 };
 
-sub BUILD {
-    shift;
-}
+sub BUILD { }
 
 around 'BUILD' => sub {
   my $orig = shift;
   my $self = shift;
   my %args = %{ $_[0] };
-  $self = $self->$orig(\%args);
+  $self->$orig(\%args);
   my @extra = grep { !exists($self->{$_}) } keys %args;
   @{$self}{@extra} = @args{@extra};
   return $self;
