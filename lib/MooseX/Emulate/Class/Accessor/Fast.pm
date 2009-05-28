@@ -77,17 +77,18 @@ my $locate_metaclass = sub {
 };
 
 sub BUILD {
+    shift;
+}
+
+around 'BUILD' => sub {
+  my $orig = shift;
   my $self = shift;
-  my %args;
-  if (scalar @_ == 1 && defined $_[0] && ref($_[0]) eq 'HASH') {
-    %args = %{$_[0]};
-  } elsif( scalar(@_) ) {
-    %args = @_;
-  }
+  my %args = %{ $_[0] };
+  $self = $self->$orig(\%args);
   my @extra = grep { !exists($self->{$_}) } keys %args;
   @{$self}{@extra} = @args{@extra};
   return $self;
-}
+};
 
 =head2 mk_accessors @field_names
 
