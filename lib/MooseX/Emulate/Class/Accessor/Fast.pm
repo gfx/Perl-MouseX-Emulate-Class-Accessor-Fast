@@ -6,7 +6,7 @@ use Scalar::Util ();
 
 use MooseX::Emulate::Class::Accessor::Fast::Meta::Accessor ();
 
-our $VERSION = '0.00802';
+our $VERSION = '0.00900';
 
 =head1 NAME
 

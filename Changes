@@ -1,4 +1,4 @@
-0.00900
+0.00900    May 29, 2009
           - Fix so that classes which implement BUILD themselves still get
             all attributes passed to their constuctor placed into the instance
             hash (t0m)
