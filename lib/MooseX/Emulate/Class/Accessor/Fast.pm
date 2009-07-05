@@ -115,7 +115,7 @@ sub mk_accessors {
 
     #dont overwrite existing methods
     if($reader eq $writer){
-      my %opts = ( $meta->has_method($reader) ? () : (accessor => $reader) );
+      my %opts = ( $meta->has_method($reader) ? ( is => 'bare' ) : (accessor => $reader) );
       my $attr = $meta->find_attribute_by_name($attr_name) || $meta->add_attribute($attr_name, %opts,
         traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
       );
@@ -151,7 +151,7 @@ sub mk_ro_accessors {
     $meta->remove_attribute($attr_name)
       if $meta->find_attribute_by_name($attr_name);
     my $reader = $self->accessor_name_for($attr_name);
-    my @opts = ($meta->has_method($reader) ? () : (reader => $reader) );
+    my @opts = ($meta->has_method($reader) ? (is => 'bare') : (reader => $reader) );
     my $attr = $meta->add_attribute($attr_name, @opts,
       traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
     ) if scalar(@opts);
@@ -263,7 +263,8 @@ sub make_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
+     is => 'bare',
   );
   my $reader = $attr->get_read_method_ref;
   my $writer = $attr->get_write_method_ref;
@@ -279,7 +280,8 @@ sub make_ro_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
+     is => 'bare',
   );
   return $attr->get_read_method_ref;
 }
@@ -289,7 +291,8 @@ sub make_wo_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
+      is => 'bare',
   );
   return $attr->get_write_method_ref;
 }
