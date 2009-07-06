@@ -1,3 +1,4 @@
+0.00901    July 06, 2009
           - Fix to not warn with newer versions of Moose by passing is => 'bare'
             to process_accessors method.
 
