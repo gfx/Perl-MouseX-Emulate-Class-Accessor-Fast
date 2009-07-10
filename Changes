@@ -1,3 +1,7 @@
+0.00902    July 10, 2009
+          - Bump required Moose version to avoid issues with is => 'bare'
+            when an older version of Moose is already installed.
+
 0.00901    July 06, 2009
           - Fix to not warn with newer versions of Moose by passing is => 'bare'
             to process_accessors method.
