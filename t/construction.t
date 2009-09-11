@@ -21,7 +21,7 @@ require_ok("MooseX::Emulate::Class::Accessor::Fast");
   package MyClass::ImmutableMooseChild;
   use Moose;
   extends 'MyClass';
-  __PACKAGE__->meta->make_immutable;
+  __PACKAGE__->meta->make_immutable(allow_mutable_ancestors => 1);
 }
 
 {
