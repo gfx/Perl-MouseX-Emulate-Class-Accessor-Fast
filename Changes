@@ -1,3 +1,6 @@
+0.00903    Sept 15, 2009
+          - Silence a test warning from Moose 0.90 (Dave Rolsky).
+
 0.00902    July 10, 2009
           - Bump required Moose version to avoid issues with is => 'bare'
             when an older version of Moose is already installed.
