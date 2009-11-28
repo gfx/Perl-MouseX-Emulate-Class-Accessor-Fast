@@ -2,7 +2,7 @@
 use strict;
 use Test::More tests => 9;
 
-require_ok("MooseX::Adopt::Class::Accessor::Fast");
+require_ok("MouseX::Adopt::Class::Accessor::Fast");
 {
   @Foo::ISA = qw(Class::Accessor::Fast);
   Foo->mk_accessors(qw( foo ));

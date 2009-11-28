@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More tests => 1;
-use MooseX::Adopt::Class::Accessor::Fast;
+use MouseX::Adopt::Class::Accessor::Fast;
 
 {
   package MyClass::Accessor::Chained::Fast;

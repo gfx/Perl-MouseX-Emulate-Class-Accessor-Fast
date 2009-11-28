@@ -1,23 +1,23 @@
-package MooseX::Emulate::Class::Accessor::Fast;
+package MouseX::Emulate::Class::Accessor::Fast;
 
-use Moose::Role;
-use Class::MOP ();
+use Mouse::Role;
+use Mouse::Meta::Class ();
 use Scalar::Util ();
 
-use MooseX::Emulate::Class::Accessor::Fast::Meta::Accessor ();
+use MouseX::Emulate::Class::Accessor::Fast::Meta::Accessor ();
 
 our $VERSION = '0.00903';
 
 =head1 NAME
 
-MooseX::Emulate::Class::Accessor::Fast - Emulate Class::Accessor::Fast behavior using Moose attributes
+MouseX::Emulate::Class::Accessor::Fast - Emulate Class::Accessor::Fast behavior using Mouse attributes
 
 =head1 SYNOPSYS
 
     package MyClass;
-    use Moose;
+    use Mouse;
 
-    with 'MooseX::Emulate::Class::Accessor::Fast';
+    with 'MouseX::Emulate::Class::Accessor::Fast';
 
 
     #fields with readers and writers
@@ -31,7 +31,7 @@ MooseX::Emulate::Class::Accessor::Fast - Emulate Class::Accessor::Fast behavior 
 =head1 DESCRIPTION
 
 This module attempts to emulate the behavior of L<Class::Accessor::Fast> as
-accurately as possible using the Moose attribute system. The public API of
+accurately as possible using the Mouse attribute system. The public API of
 C<Class::Accessor::Fast> is wholly supported, but the private methods are not.
 If you are only using the public methods (as you should) migration should be a
 matter of switching your C<use base> line to a C<with> line.
@@ -49,7 +49,7 @@ documentation please see L<Class::Accessor::Fast> and L<Class::Accessor>.
 Please note that, at this time, the C<is> flag attribute is not being set. To
 determine the C<reader> and C<writer> methods using introspection in later versions
 of L<Class::MOP> ( > 0.38) please use the C<get_read_method> and C<get_write_method>
-methods in L<Class::MOP::Attribute>. Example
+methods in L<Mouse::Meta::Attribute>. Example
 
     # with Class::MOP <= 0.38
     my $attr = $self->meta->find_attribute_by_name($field_name);
@@ -65,15 +65,15 @@ methods in L<Class::MOP::Attribute>. Example
 
 =head2 BUILD $self %args
 
-Change the default Moose class building to emulate the behavior of C::A::F and
+Change the default Mouse class building to emulate the behavior of C::A::F and
 store arguments in the instance hashref.
 
 =cut
 
 my $locate_metaclass = sub {
   my $class = Scalar::Util::blessed($_[0]) || $_[0];
-  return Class::MOP::get_metaclass_by_name($class)
-    || Moose::Meta::Class->initialize($class);
+  return Mouse::Util::get_metaclass_by_name($class)
+    || Mouse::Meta::Class->initialize($class);
 };
 
 sub BUILD { }
@@ -94,8 +94,8 @@ Create read-write accessors. An attribute named C<$field_name> will be created.
 The name of the c<reader> and C<writer> methods will be determined by the return
 value of C<accessor_name_for> and C<mutator_name_for>, which by default return the
 name passed unchanged. If the accessor and mutator names are equal the C<accessor>
-attribute will be passes to Moose, otherwise the C<reader> and C<writer> attributes
-will be passed. Please see L<Class::MOP::Attribute> for more information.
+attribute will be passes to Mouse, otherwise the C<reader> and C<writer> attributes
+will be passed. Please see L<Mouse::Meta::Attribute> for more information.
 
 =cut
 
@@ -117,7 +117,7 @@ sub mk_accessors {
     if($reader eq $writer){
       my %opts = ( $meta->has_method($reader) ? ( is => 'bare' ) : (accessor => $reader) );
       my $attr = $meta->find_attribute_by_name($attr_name) || $meta->add_attribute($attr_name, %opts,
-        traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+        traits => ['MouseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
       );
       if($attr_name eq $reader){
         my $alias = "_${attr_name}_accessor";
@@ -128,7 +128,7 @@ sub mk_accessors {
       my @opts = ( $meta->has_method($writer) ? () : (writer => $writer) );
       push(@opts, (reader => $reader)) unless $meta->has_method($reader);
       my $attr = $meta->find_attribute_by_name($attr_name) || $meta->add_attribute($attr_name, @opts,
-        traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+        traits => ['MouseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
       );
     }
   }
@@ -153,7 +153,7 @@ sub mk_ro_accessors {
     my $reader = $self->accessor_name_for($attr_name);
     my @opts = ($meta->has_method($reader) ? (is => 'bare') : (reader => $reader) );
     my $attr = $meta->add_attribute($attr_name, @opts,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+      traits => ['MouseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
     ) if scalar(@opts);
     if($reader eq $attr_name && $reader eq $self->mutator_name_for($attr_name)){
       $meta->add_method("_${attr_name}_accessor" => $attr->get_read_method_ref)
@@ -182,7 +182,7 @@ sub mk_wo_accessors {
     my $writer = $self->mutator_name_for($attr_name);
     my @opts = ($meta->has_method($writer) ? () : (writer => $writer) );
     my $attr = $meta->add_attribute($attr_name, @opts,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
+      traits => ['MouseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute']
     ) if scalar(@opts);
     if($writer eq $attr_name && $writer eq $self->accessor_name_for($attr_name)){
       $meta->add_method("_${attr_name}_accessor" => $attr->get_write_method_ref)
@@ -202,8 +202,6 @@ sub follow_best_practice {
   my $self = shift;
   my $meta = $locate_metaclass->($self);
 
-  $meta->remove_method('mutator_name_for');
-  $meta->remove_method('accessor_name_for');
   $meta->add_method('mutator_name_for',  sub{ return "set_".$_[1] });
   $meta->add_method('accessor_name_for', sub{ return "get_".$_[1] });
 }
@@ -263,7 +261,7 @@ sub make_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
+      traits => ['MouseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
      is => 'bare',
   );
   my $reader = $attr->get_read_method_ref;
@@ -280,7 +278,7 @@ sub make_ro_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
+      traits => ['MouseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
      is => 'bare',
   );
   return $attr->get_read_method_ref;
@@ -291,7 +289,7 @@ sub make_wo_accessor {
   my($class, $field) = @_;
   my $meta = $locate_metaclass->($class);
   my $attr = $meta->find_attribute_by_name($field) || $meta->add_attribute($field,
-      traits => ['MooseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
+      traits => ['MouseX::Emulate::Class::Accessor::Fast::Meta::Role::Attribute'],
       is => 'bare',
   );
   return $attr->get_write_method_ref;
@@ -301,14 +299,14 @@ sub make_wo_accessor {
 
 =head2 meta
 
-See L<Moose::Meta::Class>.
+See L<Mouse::Meta::Class>.
 
 =cut
 
 =head1 SEE ALSO
 
-L<Moose>, L<Moose::Meta::Attribute>, L<Class::Accessor>, L<Class::Accessor::Fast>,
-L<Class::MOP::Attribute>, L<MooseX::Adopt::Class::Accessor::Fast>
+L<Mouse>, L<Mouse::Meta::Attribute>, L<Class::Accessor>, L<Class::Accessor::Fast>,
+L<Mouse::Meta::Attribute>, L<MouseX::Adopt::Class::Accessor::Fast>
 
 =head1 AUTHORS
 

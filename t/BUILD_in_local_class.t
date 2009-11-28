@@ -1,9 +1,9 @@
 {
     package My::Class;
-    use Moose;
+    use Mouse;
     use namespace::clean -except => 'meta';
 
-    with 'MooseX::Emulate::Class::Accessor::Fast';
+    with 'MouseX::Emulate::Class::Accessor::Fast';
 
     sub BUILD {
         my ($self, $args) = @_;

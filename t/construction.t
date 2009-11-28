@@ -3,23 +3,23 @@ use strict;
 use Test::More tests => 9;
 
 #1
-require_ok("MooseX::Emulate::Class::Accessor::Fast");
+require_ok("MouseX::Emulate::Class::Accessor::Fast");
 
 {
   package MyClass;
-  use Moose;
-  with 'MooseX::Emulate::Class::Accessor::Fast';
+  use Mouse;
+  with 'MouseX::Emulate::Class::Accessor::Fast';
 }
 
 {
-  package MyClass::MooseChild;
-  use Moose;
+  package MyClass::MouseChild;
+  use Mouse;
   extends 'MyClass';
 }
 
 {
-  package MyClass::ImmutableMooseChild;
-  use Moose;
+  package MyClass::ImmutableMouseChild;
+  use Mouse;
   extends 'MyClass';
   __PACKAGE__->meta->make_immutable(allow_mutable_ancestors => 1);
 }
@@ -31,20 +31,20 @@ require_ok("MooseX::Emulate::Class::Accessor::Fast");
 
 {
   package MyImmutableClass;
-  use Moose;
-  with 'MooseX::Emulate::Class::Accessor::Fast';
+  use Mouse;
+  with 'MouseX::Emulate::Class::Accessor::Fast';
   __PACKAGE__->meta->make_immutable;
 }
 
 {
-  package MyImmutableClass::MooseChild;
-  use Moose;
+  package MyImmutableClass::MouseChild;
+  use Mouse;
   extends 'MyImmutableClass';
 }
 
 {
-  package MyImmutableClass::ImmutableMooseChild;
-  use Moose;
+  package MyImmutableClass::ImmutableMouseChild;
+  use Mouse;
   extends 'MyImmutableClass';
   __PACKAGE__->meta->make_immutable;
 }
@@ -58,11 +58,11 @@ require_ok("MooseX::Emulate::Class::Accessor::Fast");
 foreach my $class (qw/
                       MyClass 
                       MyImmutableClass 
-                      MyClass::MooseChild 
-                      MyClass::ImmutableMooseChild  
+                      MyClass::MouseChild 
+                      MyClass::ImmutableMouseChild  
                       MyClass::TraditionalChild 
-                      MyImmutableClass::MooseChild 
-                      MyImmutableClass::ImmutableMooseChild 
+                      MyImmutableClass::MouseChild 
+                      MyImmutableClass::ImmutableMouseChild 
                       MyImmutableClass::TraditionalChild
                                                            /) {
     my $instance = $class->new(foo => 'bar');

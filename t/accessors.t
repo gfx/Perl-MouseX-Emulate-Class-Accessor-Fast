@@ -3,16 +3,16 @@ use strict;
 use Test::More tests => 33;
 use Test::Exception;
 
-use Class::MOP;
+use Mouse::Meta::Class;
 
 #1
-require_ok("MooseX::Adopt::Class::Accessor::Fast");
+require_ok("MouseX::Adopt::Class::Accessor::Fast");
 
 my $class = "Testing::Class::Accessor::Fast";
 
 {
   my $infinite_loop_indicator = 0;
-  my $meta = Class::MOP::Class->create(
+  my $meta = Mouse::Meta::Class->create(
     $class,
     superclasses => ['Class::Accessor::Fast'],
     methods => {

@@ -4,7 +4,7 @@ use lib 't/lib';
 use Test::More tests => 13;
 
 #1,2
-require_ok("MooseX::Adopt::Class::Accessor::Fast");
+require_ok("MouseX::Adopt::Class::Accessor::Fast");
 use_ok('TestAdoptCAF');
 
 #3-6

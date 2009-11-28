@@ -6,11 +6,11 @@ use Test::More tests => 5;
 use Test::Exception;
 
 # 1
-use_ok('MooseX::Emulate::Class::Accessor::Fast');
+use_ok('MouseX::Emulate::Class::Accessor::Fast');
 {
   package My::Test::Package;
-  use Moose;
-  with 'MooseX::Emulate::Class::Accessor::Fast';
+  use Mouse;
+  with 'MouseX::Emulate::Class::Accessor::Fast';
   for (0..1) {
     __PACKAGE__->mk_accessors(qw( foo ));
     __PACKAGE__->mk_ro_accessors(qw( bar ));
