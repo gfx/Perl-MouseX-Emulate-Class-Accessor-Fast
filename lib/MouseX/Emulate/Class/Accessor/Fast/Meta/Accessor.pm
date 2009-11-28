@@ -3,12 +3,15 @@ package MouseX::Emulate::Class::Accessor::Fast::Meta::Accessor;
 use Mouse;
 
 # It can be PP or XS
-extends( Mouse::Util::MOUSE_XS ? 'Mouse::Meta::Method::Accessor' : 'Mouse::Meta::Method::Accessor::XS' );
+extends( Mouse::Util::MOUSE_XS ? 'Mouse::Meta::Method::Accessor::XS' : 'Mouse::Meta::Method::Accessor' );
 
 sub _generate_accessor {
-    my($method_class, @args) = @_;
+    my($method_class, $attr, $class, $type) = @_;
 
-    my $accessor = $method_class->SUPER::_generate_accessor(@args);
+    my $accessor = $method_class->SUPER::_generate_accessor($attr, $class, defined $type ? $type : ());
+
+    return $accessor if defined $type;
+
     return sub {
         my $self = shift;
         $accessor->($self, $_[0]) if scalar(@_) == 1;

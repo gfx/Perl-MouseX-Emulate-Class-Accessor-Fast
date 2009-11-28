@@ -122,7 +122,9 @@ sub mk_accessors {
       if($attr_name eq $reader){
         my $alias = "_${attr_name}_accessor";
         next if $meta->has_method($alias);
-        $meta->add_method($alias => $attr->get_read_method_ref);
+        $meta->add_method($alias => $attr->accessor_metaclass->_generate_accessor(
+            $attr, $meta
+        ));
       }
     } else {
       my @opts = ( $meta->has_method($writer) ? () : (writer => $writer) );
